@@ -276,6 +276,8 @@ def checkForClear2(connectivity):
 # https://www.geeksforgeeks.org/introduction-to-pygame/
 while on:
     # what is this program structure
+    # TODO: GUI elements like main menu, controls, etc.
+        # speaking of which controls: WASD/arrow keys to move cursor, Space to swap tiles
     controls()
     spawning()
     drawGrid()
