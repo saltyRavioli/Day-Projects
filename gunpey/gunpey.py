@@ -118,7 +118,8 @@ def spawning():
         for j in range(5):
             grid[i][j] = grid[i+1][j]
     # move player up (because it's jank when the board moves up but the player doesn't)
-    player[0]-=1
+    if (player[0]>0):
+        player[0]-=1
 
     # debug
     # grid[9][0] = Tile(2, 3)
@@ -133,10 +134,11 @@ def spawning():
         if (rng<=chance):
             corner1 = random.randint(1,4)
             corner2 = random.randint(1,4)
-            if (corner1 == corner2 or rng > 2):
+            if (corner1 == corner2 or rng > 1):
                 # prevent corners from being the same
                 # also, sometimes decide to give a line that guarantees crossing from left to right
                     # because rng keeps giving me 1-2 and 3-4 lines
+                    # changed sometimes to most of the time because it's still giving me way too many of those
                 corner1 = random.randint(1, 2)
                 corner2 = random.randint(3, 4)
             grid[9][j] = Tile(corner1, corner2)
@@ -165,12 +167,12 @@ def checkTileConnectivity(connectivityArray, i, j):
         if (hasCorner(i-1, j-1, 4) and hasCorner(i, j, 1) and connectivityArray[i-1][j-1]):
             connectivityArray[i][j] = True
         # top mid
-        elif ((hasCorner(i-1, j, 2) and hasCorner(i, j, 1)) or 
+        if ((hasCorner(i-1, j, 2) and hasCorner(i, j, 1)) or 
                 (hasCorner(i-1, j, 4) and hasCorner(i, j, 3)) and 
                 connectivityArray[i-1][j]):
             connectivityArray[i][j] = True
         # top right
-        elif (j<4 and hasCorner(i-1, j+1, 2) and hasCorner(i, j, 3) and connectivityArray[i-1][j+1]):
+        if (j<4 and hasCorner(i-1, j+1, 2) and hasCorner(i, j, 3) and connectivityArray[i-1][j+1]):
             connectivityArray[i][j] = True
     # check tiles below
     if (i<9):
@@ -178,12 +180,12 @@ def checkTileConnectivity(connectivityArray, i, j):
         if (hasCorner(i+1, j-1, 3) and hasCorner(i, j, 2) and connectivityArray[i+1][j-1]):
             connectivityArray[i][j] = True
         # bot mid
-        elif ((hasCorner(i+1, j, 1) and hasCorner(i, j, 2)) or 
+        if ((hasCorner(i+1, j, 1) and hasCorner(i, j, 2)) or 
                 (hasCorner(i+1, j, 3) and hasCorner(i, j, 4)) and 
-                connectivityArray[i-1][j]):
+                connectivityArray[i+1][j]):
             connectivityArray[i][j] = True
         # bot right
-        elif (j<4 and hasCorner(i+1, j+1, 3) and hasCorner(i, j, 2) and connectivityArray[i+1][j+1]):
+        if (j<4 and hasCorner(i+1, j+1, 1) and hasCorner(i, j, 4) and connectivityArray[i+1][j+1]):
             connectivityArray[i][j] = True
     # check tiles on same row
     # left
@@ -238,6 +240,9 @@ def checkForClear():
                 # wait maybe it's not related to this
                 # maybe it's related to different tiles being the same object
     # TODO: debug this, it's probably an error in checkTileConnectivity()
+        # yea there was typos in there
+    # still have weird cases of stuff disappearing randomly
+        # and lines only partially being cleared sometimes
     checkForClear2(connectivity)
 
 
